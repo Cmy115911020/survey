@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>金陵女中家長教育品質與推薦意願調查問卷</title>
+<style>
+:root{--pri:#7a2e4a;--pri-l:#f6eaef;--bd:#ddd;--tx:#222;--mut:#666;--err:#c0392b;--bg:#faf8f9}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.7}
+.wrap{max-width:860px;margin:0 auto;padding:16px}
+header{background:var(--pri);color:#fff;border-radius:12px;padding:24px;margin-bottom:16px}
+header h1{margin:0 0 10px;font-size:1.4rem}
+header p{margin:6px 0;font-size:.95rem}
+.progress{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0}
+.bar{height:8px;background:#e6dde1;border-radius:4px;overflow:hidden}
+.bar>div{height:100%;width:0;background:var(--pri);transition:width .2s}
+.ptxt{font-size:.8rem;color:var(--mut);text-align:right}
+section.sec{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:20px;margin-bottom:16px}
+section.sec>h2{margin:0 0 6px;font-size:1.15rem;color:var(--pri);border-bottom:2px solid var(--pri-l);padding-bottom:6px}
+.note{color:var(--mut);font-size:.9rem;margin:6px 0 12px}
+h3{font-size:1rem;margin:18px 0 6px;color:var(--pri)}
+.q{padding:14px 0;border-bottom:1px dashed var(--bd)}
+.q:last-child{border-bottom:none}
+.q.err{background:#fdf1ef;border-radius:8px;padding:14px 10px}
+.qt{font-weight:600;margin-bottom:8px}
+.req{color:var(--err)}
+.hint{font-weight:400;color:var(--mut);font-size:.85rem}
+.likert{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.likert label{border:1px solid var(--bd);border-radius:8px;padding:8px 2px;text-align:center;cursor:pointer;font-size:.82rem;line-height:1.3;background:#fff}
+.likert label b{display:block;font-size:1.05rem}
+.likert input{display:none}
+.likert input:checked+span{color:#fff}
+.likert label:has(input:checked){background:var(--pri);color:#fff;border-color:var(--pri)}
+.nps{display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.nps label{border:1px solid var(--bd);border-radius:8px;text-align:center;padding:8px 0;cursor:pointer;background:#fff}
+.nps input{display:none}
+.nps label:has(input:checked){background:var(--pri);color:#fff;border-color:var(--pri)}
+.npsl{display:flex;justify-content:space-between;font-size:.78rem;color:var(--mut);margin-top:4px}
+.opts label{display:flex;gap:8px;align-items:flex-start;padding:6px 8px;border-radius:6px;cursor:pointer}
+.opts label:hover{background:var(--pri-l)}
+.opts input{margin-top:6px;accent-color:var(--pri)}
+.opts label.dis{opacity:.4;cursor:not-allowed}
+input[type=text],input[type=number],select,textarea{width:100%;padding:9px 10px;border:1px solid var(--bd);border-radius:8px;font:inherit;background:#fff}
+textarea{min-height:90px;resize:vertical}
+.other{margin:2px 0 4px 30px;width:calc(100% - 30px)}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.inline{display:flex;gap:16px;flex-wrap:wrap}
+.cnt{font-size:.8rem;color:var(--mut);margin-top:4px}
+.hide{display:none!important}
+.errmsg{color:var(--err);font-size:.85rem;margin-top:6px;display:none}
+.q.err .errmsg{display:block}
+button.submit{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:14px 32px;font-size:1.05rem;cursor:pointer;width:100%}
+button.submit:hover{opacity:.92}
+.done{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:32px;text-align:center}
+@media(max-width:600px){.likert{grid-template-columns:repeat(5,1fr);gap:3px}.likert label{font-size:.72rem}.row3{grid-template-columns:1fr}.nps{grid-template-columns:repeat(6,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div id="formArea">
+<header>
+  <h1>金陵女中家長教育品質與推薦意願調查問卷</h1>
+  <p>親愛的家長，您好：</p>
+  <p>本問卷旨在了解家長對金陵女中教育品質、孩子學習與成長、整體滿意度及推薦意願的看法，並蒐集對學校未來發展的意見。本問卷沒有標準答案，請依您與孩子的實際經驗與感受作答。</p>
+  <p>若家中有兩位以上子女目前就讀金陵，請選定其中一位孩子，並全程以同一位孩子的就讀經驗作答。涉及學校教學或教師表現的題目，請盡量綜合孩子接觸不同科目、不同教師的整體經驗判斷，而非僅以單一科目或單一教師的經驗作答。</p>
+  <p><b>核心題目：1＝非常不同意｜2＝不同意｜3＝普通｜4＝同意｜5＝非常同意</b></p>
+</header>
+<div class="progress"><div class="bar"><div id="bar"></div></div><div class="ptxt" id="ptxt"></div></div>
+<form id="f" novalidate></form>
+</div>
+</div>
+
+<script>
+/* ============ 設定 ============ */
+// 若要把資料傳到 Google Apps Script / 後端，請填入網址；留空則只會下載 CSV。
+const ENDPOINT = "";
+
+// ★ 送到 Google 表單：執行 build_receiver_form.gs 後，把記錄中印出的 GOOGLE_FORM 整段貼來取代下面這行
+const GOOGLE_FORM = {"action":"https://docs.google.com/forms/d/e/1FAIpQLSfmRgCVyyR5NsEBCVCwP8tIN4C00D6DGXcj43w_MgvhXoqSYA/formResponse","entries":{"Q1":"entry.1819601074","Q2":"entry.2122648728","Q3":"entry.827198006","Q4":"entry.2092033350","Q5":"entry.296092800","Q6":"entry.1568606087","Q7":"entry.92070349","Q8":"entry.281232016","Q9":"entry.977473759","Q10":"entry.1164616563","Q11":"entry.254447172","Q12":"entry.761907435","Q13":"entry.1132470160","Q14":"entry.225315446","Q15":"entry.1035292822","Q16":"entry.25417588","Q17":"entry.172443895","Q18":"entry.420245407","Q19":"entry.1652308519","Q20":"entry.1283221801","Q21":"entry.2055562266","Q22":"entry.624836209","Q23":"entry.615807626","Q24":"entry.1213054305","Q25":"entry.1196807400","Q26":"entry.1381290598","Q27":"entry.707621596","Q28":"entry.1038076173","Q29":"entry.1848344443","Q30":"entry.1095154743","Q31":"entry.239967493","Q32":"entry.1808502777","Q33":"entry.1986847575","Q34":"entry.2076667666","Q35":"entry.2022513395","Q36":"entry.1077437961","Q37":"entry.1237343914","Q38":"entry.1580160483","Q39":"entry.360377828","Q40":"entry.1747458174","Q41":"entry.1810209164","Q42":"entry.903434382","Q43":"entry.704239002","Q44":"entry.1277624113"}};
+const CLASSES = [];
+for(let i=301;i<=308;i++)CLASSES.push(String(i));
+for(let i=401;i<=409;i++)CLASSES.push(String(i));
+for(let i=501;i<=509;i++)CLASSES.push(String(i));
+for(let i=31;i<=36;i++)CLASSES.push(String(i));
+for(let i=41;i<=45;i++)CLASSES.push(String(i));
+for(let i=51;i<=56;i++)CLASSES.push(String(i));
+
+const LK=["非常不同意","不同意","普通","同意","非常同意"];
+
+/* ============ 題目資料 ============ */
+// type: likert | nps | check | radio | text | area | texts3 | select | number | q33
+const SECTIONS=[
+{title:"Ａ．目前的核心教育經驗",groups:[
+ {sub:"教學與學習支持品質",qs:[
+  {id:1,t:"整體而言，我感受到學校的教學能有效幫助孩子學習與理解課程內容。",type:"likert"},
+  {id:2,t:"學校提供的課程與學習活動，有助於孩子的學習與能力發展。",type:"likert"},
+  {id:3,t:"我感受到學校能提供有助於孩子持續學習與進步的學習支持。",type:"likert"},
+  {id:4,t:"當孩子在學習上遇到困難時，學校能提供適切的資源與協助。",type:"likert"},
+  {id:5,t:"學校提供的學習支持，能適度考量學生不同的能力與學習需要。",type:"likert"}]},
+ {sub:"教師專業與關懷品質",qs:[
+  {id:6,t:"我感受到孩子的老師在教學與學生引導上展現足夠的專業能力。",type:"likert"},
+  {id:7,t:"當孩子在學習或成長上需要協助時，老師願意提供必要的支持與協助。",type:"likert"},
+  {id:8,t:"老師能依孩子不同的學習或成長狀況，給予適合她需要的回應與引導。",type:"likert"},
+  {id:9,t:"老師與家長溝通孩子狀況時，能提供清楚且有幫助的資訊。",type:"likert"},
+  {id:10,t:"我感受到老師在與孩子互動時，能展現尊重、理解與關心。",type:"likert"}]}
+]},
+{title:"Ｂ．孩子的成長與轉化",note:"作答前，請先回想孩子剛進入金陵時的狀況，再與孩子目前的狀況相比，依實際觀察作答。",groups:[{qs:[
+  {id:11,t:"與剛進入金陵時相比，我感受到孩子目前更有自信。",type:"likert"},
+  {id:12,t:"與剛進入金陵時相比，我感受到孩子目前在知識、能力與技能上有所提升。",type:"likert"},
+  {id:13,t:"與剛進入金陵時相比，我感受到孩子目前更了解自己的興趣、特質與優勢。",type:"likert"},
+  {id:14,t:"與剛進入金陵時相比，我感受到孩子目前面對學習或交付的事情時，更加認真與負責。",type:"likert"},
+  {id:15,t:"與剛進入金陵時相比，我感受到孩子目前更懂得體諒、關心與幫助他人。",type:"likert"},
+  {id:16,t:"與剛進入金陵時相比，您感受到孩子在哪些方面有較明顯的成長或改變？請選最明顯的1～3項。",type:"check",max:3,min:1,exclusive:"目前沒有感受到明顯改變",
+   opts:["更有自信","更了解自己的興趣、特質與優勢","學習能力有所提升","做事更加認真負責","更主動積極","更敢表達自己的想法與展現自己","更能與他人合作","更能體諒、關心與幫助他人","面對困難或挫折時更有韌性","更願意承擔並在團體中發揮正向影響","其他","目前沒有感受到明顯改變"],other:"其他"},
+  {id:17,t:"請簡單舉一個具體例子，說明您從什麼事情感受到孩子上述的改變：",type:"area",optional:true}
+]}]},
+{title:"Ｃ．家長整體評價",groups:[{qs:[
+  {id:18,t:"整體而言，我對孩子在金陵女中受到的教育服務感到滿意。",type:"likert"},
+  {id:19,t:"整體而言，金陵女中目前提供的教育服務符合我原先的期待。",type:"likert"},
+  {id:20,t:"與我心目中理想的中學相比，金陵女中目前的整體表現令我感到滿意。",type:"likert"},
+  {id:21,t:"整體而言，我認為當初選擇讓孩子就讀金陵女中是正確的決定。",type:"likert"}
+]}]},
+{title:"Ｄ．現在的推薦意願與推薦理由",groups:[{qs:[
+  {id:22,t:"如果親友正在為同齡子女選擇學校，您有多大可能性會推薦金陵女中？",type:"nps"},
+  {id:23,t:"您剛才給這個推薦分數時，最主要想到的原因是什麼？",type:"area"},
+  {id:24,t:"哪些因素最影響您目前是否願意推薦金陵女中？至多選5項。",type:"check",max:5,min:1,
+   opts:["孩子實際的學習成效與能力發展","實際感受到的課程與學習支持品質","教師的專業能力","教師對學生的關心與陪伴","孩子實際呈現的品格、態度與生命成長","班級經營、同儕互動與班級氣氛","實際感受到的校園安全與安心環境","親師溝通與行政服務","實際感受到的學校教育理念與特色","升學表現與未來發展支持","就讀後形成的學校聲譽與口碑評價","其他"],other:"其他"}
+]}]},
+{title:"Ｅ．回到入學起點：當初為什麼選擇金陵？",note:"請回想孩子尚未進入金陵、當初正在選擇學校的時候，依「當時的想法」回答，而不是依現在就讀後的感受。",groups:[{qs:[
+  {id:25,t:"如果只能選一個，當時選擇金陵最重要的原因是什麼？",type:"radio",opts:"REASONS",other:"其他"},
+  {id:26,t:"除了最重要原因外，當時還有哪些因素影響選擇？可再選至多3項。",type:"check",max:3,min:0,optional:true,opts:"REASONS",other:"其他",excludeQ:25},
+  {id:27,t:"除了金陵之外，您當時曾認真考慮過哪些其他學校？至多3所；若沒有，可填「無」。",type:"texts3"}
+]}]},
+{title:"Ｆ．現在回頭看金陵",groups:[{qs:[
+  {id:28,t:"如果要向一位正在選校的家長介紹金陵，您認為金陵最值得保留的特色或價值是什麼？如果您認為沒有特別突出的地方，也請依實際感受回答。",type:"area"},
+  {id:29,t:"整體考量孩子在金陵獲得的學習、成長與支持，我認為目前所付出的教育成本與獲得的教育價值大致相稱。",type:"likert"}
+]}]},
+{title:"Ｇ．直升／離校決策",groups:[{qs:[
+  {id:30,t:"您的孩子是否曾經歷「金陵國中部升高中部」的選擇？",type:"radio",opts:["是，最後選擇直升金陵高中部","是，最後選擇其他高中","尚未面臨此階段","不適用"]},
+  {id:31,t:"（僅選擇其他高中者回答）孩子最後選擇其他高中，最主要的原因是什麼？您認為對方提供了哪些更符合孩子需求、而金陵當時相對不足的條件？",type:"area",showIf:{q:30,val:"是，最後選擇其他高中"}}
+]}]},
+{title:"Ｈ．未來最值得投入的方向",groups:[{qs:[
+  {id:32,t:"您認為金陵女中未來最需要優先加強或發展哪些項目？至多選3項。",type:"check",max:3,min:1,
+   opts:["提升教學品質與學習成效","強化不同學生的學習支持與適性協助","提升教師專業發展","強化教師對學生的關心與陪伴","強化班級經營、團隊合作與同儕互動","加強學生認真負責的做事態度","幫助學生認識自己的興趣、特質與優勢","培養學生自信、表達、主動參與與正向影響力","維持安全、單純、令人安心的校園環境","強化升學與生涯發展支持","強化家校溝通","適度發展AI與智慧教育服務","其他"],other:"其他"},
+  {id:33,t:"如果學校現階段只能優先投入其中一項，您最希望是哪一項？（選項來自您在上一題勾選的項目）",type:"q33"},
+  {id:34,t:"除了前面所提項目，您認為金陵未來最值得優先改善或發展的一件事是什麼？為什麼？",type:"area"}
+]}]},
+{title:"Ｉ．智慧教育服務接受度",groups:[{qs:[
+  {id:35,t:"如果智慧科技能協助學校更了解學生的學習需求，我樂於接受學校適度運用這類服務。",type:"likert"},
+  {id:36,t:"如果智慧科技能協助教師更有效掌握學生學習狀況，我支持學校將其作為教師專業判斷的輔助工具。",type:"likert"},
+  {id:37,t:"如果智慧科技能讓家長更即時、清楚了解孩子的重要學習與成長資訊，我樂於使用這類服務。",type:"likert"},
+  {id:38,t:"在妥善保護學生資料與隱私的前提下，我能接受學校運用資料與智慧科技改善教育服務。",type:"likert"},
+  {id:39,t:"整體而言，只要教師與學校仍保有主要的教育判斷與責任，我支持金陵適度發展智慧教育服務。",type:"likert"}
+]}]},
+{title:"Ｊ．基本資料",groups:[{qs:[
+  {id:40,t:"孩子目前就讀：",type:"radio",inline:true,opts:["國中部","高中部"]},
+  {id:41,t:"孩子目前就讀的班級：",type:"select",opts:CLASSES},
+  {id:42,t:"孩子在金陵就讀年資（年）：",type:"number"},
+  {id:43,t:"家長教育程度：",type:"radio",inline:true,opts:["高中職以下","專科","大學","研究所以上","其他或不便回答"]},
+  {id:44,t:"家長職業：",type:"radio",inline:true,opts:["軍公教","工商服務業","自由業／自營","家管","其他"],other:"其他"}
+]}]}
+];
+const REASONS=["學校的教學品質","升學表現與學習成果","教師專業與對學生的關心","品格與全人教育","校園安全","校風單純、讓家長感到安心","女子教育環境","課程與學校特色","學校聲譽","親友推薦","交通或地理位置","孩子自己的意願","其他"];
+
+/* ============ 產生表單 ============ */
+const form=document.getElementById("f");
+const ALLQ=[];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function render(q){
+  const n="q"+q.id;
+  let h=`<div class="q" id="wrap${q.id}" data-id="${q.id}"><div class="qt">${q.id}. ${esc(q.t)}${q.optional?' <span class="hint">（選填）</span>':' <span class="req">*</span>'}</div>`;
+  if(q.type==="likert"){
+    h+='<div class="likert">'+LK.map((l,i)=>`<label><input type="radio" name="${n}" value="${i+1}"><b>${i+1}</b>${l}</label>`).join("")+'</div>';
+  }else if(q.type==="nps"){
+    h+='<div class="nps">'+[...Array(11).keys()].map(i=>`<label><input type="radio" name="${n}" value="${i}">${i}</label>`).join("")+'</div><div class="npsl"><span>0＝完全不可能</span><span>10＝非常可能</span></div>';
+  }else if(q.type==="radio"||q.type==="check"){
+    const opts=q.opts==="REASONS"?REASONS:q.opts, t=q.type==="radio"?"radio":"checkbox";
+    h+=`<div class="opts ${q.inline?"inline":""}" id="opts${q.id}">`+opts.map(o=>`<label><input type="${t}" name="${n}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("")+'</div>';
+    if(q.other)h+=`<input type="text" class="other hide" id="other${q.id}" placeholder="請說明">`;
+    if(q.type==="check")h+=`<div class="cnt" id="cnt${q.id}"></div>`;
+  }else if(q.type==="text"){
+    h+=`<input type="text" name="${n}">`;
+  }else if(q.type==="area"){
+    h+=`<textarea name="${n}"></textarea>`;
+  }else if(q.type==="texts3"){
+    h+='<div class="row3">'+[1,2,3].map(i=>`<input type="text" name="${n}_${i}" placeholder="${"①②③"[i-1]}">`).join("")+'</div>';
+  }else if(q.type==="select"){
+    h+=`<select name="${n}"><option value="">請選擇班級</option>`+q.opts.map(o=>`<option value="${o}">${o}</option>`).join("")+'</select>';
+  }else if(q.type==="number"){
+    h+=`<input type="number" name="${n}" min="0" max="12" step="0.5" inputmode="decimal" style="max-width:160px">`;
+  }else if(q.type==="q33"){
+    h+=`<div class="opts" id="opts33"><div class="hint">請先回答上一題</div></div>`;
+  }
+  h+='<div class="errmsg">請完成此題</div></div>';
+  return h;
+}
+
+let html="";
+SECTIONS.forEach(s=>{
+  html+=`<section class="sec"><h2>${s.title}</h2>`+(s.note?`<div class="note">${s.note}</div>`:"");
+  s.groups.forEach(g=>{
+    if(g.sub)html+=`<h3>${g.sub}</h3>`;
+    g.qs.forEach(q=>{ALLQ.push(q);html+=render(q)});
+  });
+  html+="</section>";
+});
+html+='<button type="submit" class="submit">送出問卷</button><p class="note" style="text-align:center">★ 問卷到此結束，感謝您撥冗填答！ ★</p>';
+form.innerHTML=html;
+
+/* ============ 互動邏輯 ============ */
+const $=id=>document.getElementById(id);
+const byId=id=>ALLQ.find(q=>q.id===id);
+const checked=(id)=>[...form.querySelectorAll(`[name=q${id}]:checked`)].map(e=>e.value);
+
+form.addEventListener("change",e=>{
+  const el=e.target, m=/^q(\d+)/.exec(el.name||"");
+  if(!m){return}
+  const id=+m[1], q=byId(id);
+  // 其他 文字框
+  if(q.other){
+    const on=checked(id).includes(q.other);
+    $("other"+id).classList.toggle("hide",!on);
+    if(!on)$("other"+id).value="";
+  }
+  // 複選限制與互斥
+  if(q.type==="check"){
+    if(q.exclusive&&el.checked){
+      if(el.value===q.exclusive){form.querySelectorAll(`[name=q${id}]`).forEach(i=>{if(i!==el)i.checked=false})}
+      else{form.querySelectorAll(`[name=q${id}]`).forEach(i=>{if(i.value===q.exclusive)i.checked=false})}
+    }
+    updateLimit(q);
+  }
+  // Q25 → Q26 排除
+  if(id===25){
+    const v=checked(25)[0];
+    form.querySelectorAll("[name=q26]").forEach(i=>{
+      const same=i.value===v;
+      if(same)i.checked=false;
+      i.disabled=same; i.closest("label").classList.toggle("dis",same);
+    });
+    if(q.other&&$("other26")&&v==="其他"){}
+    updateLimit(byId(26));
+  }
+  // Q30 → Q31
+  if(id===30){
+    const show=checked(30)[0]==="是，最後選擇其他高中";
+    $("wrap31").classList.toggle("hide",!show);
+    if(!show)form.querySelector("[name=q31]").value="";
+  }
+  // Q32 → Q33
+  if(id===32)buildQ33();
+  progress();
+});
+form.addEventListener("input",progress);
+
+function updateLimit(q){
+  const boxes=[...form.querySelectorAll(`[name=q${q.id}]`)];
+  const n=boxes.filter(b=>b.checked).length;
+  boxes.forEach(b=>{
+    const lock=!b.checked&&n>=q.max;
+    if(!(q.id===26&&b.closest("label").classList.contains("dis")))b.disabled=lock;
+    if(q.id!==26||!b.closest("label").classList.contains("dis"))b.closest("label").classList.toggle("dis",lock);
+  });
+  $("cnt"+q.id).textContent=`已選 ${n} / 至多 ${q.max} 項`;
+}
+function buildQ33(){
+  const sel=checked(32), box=$("opts33"), prev=checked(33)[0];
+  if(!sel.length){box.innerHTML='<div class="hint">請先回答上一題</div>';return}
+  box.innerHTML=sel.map(o=>`<label><input type="radio" name="q33" value="${esc(o)}" ${o===prev?"checked":""}><span>${esc(o)}</span></label>`).join("");
+}
+// 初始
+$("wrap31").classList.add("hide");
+ALLQ.filter(q=>q.type==="check").forEach(updateLimit);
+
+/* ============ 驗證與進度 ============ */
+function visible(q){return !$("wrap"+q.id).classList.contains("hide")}
+function answered(q){
+  const n="q"+q.id;
+  if(q.type==="texts3")return [1,2,3].some(i=>form.elements[n+"_"+i].value.trim());
+  if(["radio","check","likert","nps","q33"].includes(q.type)){
+    const v=checked(q.id);
+    if(q.type==="check")return v.length>=(q.min||1)&&v.length<=q.max;
+    return v.length>0;
+  }
+  const el=form.elements[n]; return el&&el.value.trim()!=="";
+}
+function progress(){
+  const req=ALLQ.filter(q=>!q.optional&&visible(q));
+  const d=req.filter(answered).length;
+  $("bar").style.width=(d/req.length*100)+"%";
+  $("ptxt").textContent=`已完成 ${d} / ${req.length} 題`;
+}
+progress();
+
+form.addEventListener("submit",async e=>{
+  e.preventDefault();
+  let first=null;
+  ALLQ.forEach(q=>{
+    const w=$("wrap"+q.id); w.classList.remove("err");
+    if(q.optional||!visible(q))return;
+    let ok=answered(q);
+    if(ok&&q.other&&checked(q.id).includes(q.other)&&!$("other"+q.id).value.trim()&&q.id!==44)ok=false;
+    if(!ok){w.classList.add("err");first=first||w}
+  });
+  if(first){first.scrollIntoView({behavior:"smooth",block:"center"});return}
+
+  const data={submittedAt:new Date().toISOString()};
+  ALLQ.forEach(q=>{
+    const k="Q"+q.id;
+    if(!visible(q)){data[k]="";return}
+    if(q.type==="texts3"){data[k]=[1,2,3].map(i=>form.elements["q"+q.id+"_"+i].value.trim()).filter(Boolean).join("；");return}
+    if(["radio","check","likert","nps","q33"].includes(q.type)){
+      let v=checked(q.id);
+      if(q.other&&v.includes(q.other)){v=v.map(x=>x===q.other?q.other+":"+$("other"+q.id).value.trim():x)}
+      data[k]=q.type==="check"?v.join("；"):(v[0]??"");
+    }else data[k]=form.elements["q"+q.id].value.trim();
+  });
+  console.log(data);
+  if(GOOGLE_FORM.action){
+    const body=new URLSearchParams();
+    Object.keys(GOOGLE_FORM.entries).forEach(k=>body.append(GOOGLE_FORM.entries[k],data[k]??""));
+    try{await fetch(GOOGLE_FORM.action,{method:"POST",mode:"no-cors",body})}
+    catch(err){alert("傳送失敗，將改為下載檔案。");downloadCSV(data)}
+  }else if(ENDPOINT){
+    try{await fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(data)})}
+    catch(err){alert("傳送失敗，將改為下載檔案。");downloadCSV(data)}
+  }else downloadCSV(data);
+  $("formArea").innerHTML='<div class="done"><h2>感謝您的填答！</h2><p>您的問卷已送出。</p></div>';
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+function downloadCSV(d){
+  const keys=Object.keys(d), q=s=>'"'+String(s).replace(/"/g,'""')+'"';
+  const csv="﻿"+keys.map(q).join(",")+"\n"+keys.map(k=>q(d[k])).join(",");
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download="問卷回覆_"+Date.now()+".csv";a.click();
+}
+</script>
+</body>
+</html>
